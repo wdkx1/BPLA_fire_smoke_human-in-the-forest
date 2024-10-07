@@ -1,0 +1,6 @@
+train: fire-and-smoke-detection-dataset/Fire-and-Smoke-Detection-Dataset/dataset/train/images
+val: fire-and-smoke-detection-dataset/Fire-and-Smoke-Detection-Dataset/dataset/valid/images
+test: fire-and-smoke-detection-dataset/Fire-and-Smoke-Detection-Dataset/dataset/test/images
+
+nc: 2  # Number of classes
+names: ['fire', 'smoke']  # List of class names
