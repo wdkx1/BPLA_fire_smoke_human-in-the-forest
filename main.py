@@ -3,7 +3,7 @@ import torch
 from ultralytics import YOLO
 
 # Загрузка модели YOLOv10
-model = YOLO('runs/detect/train10/weights/last.pt')
+model = YOLO('best.pt')
 
 
 # Захват видеопотока и прогнозирование
