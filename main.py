@@ -1,6 +1,8 @@
 import cv2
 import torch
 from ultralytics import YOLO
+import os
+from datetime import datetime
 
 # Загрузка модели YOLOv10
 model = YOLO('best.pt')
@@ -24,10 +26,17 @@ def analyze_output(results, frame):
 
             if confidence > max_confidence:
                 max_confidence = confidence
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 if class_id == 0 and confidence > 0.3:
                     label = f"Пожар обнаружен с вероятностью {confidence:.2f}"
-                elif class_id == 1 and confidence > 0.3:
+                    if confidence > 0.6:
+                        filename = os.path.join(os.getcwd(), f"fire_{timestamp}.jpg")
+                        cv2.imwrite(filename, frame)
+                elif class_id == 1 and confidence > 0.5:
                     label = f"Обнаружен дым с вероятностью {confidence:.2f}"
+                    if confidence > 0.6:
+                        filename = os.path.join(os.getcwd(), "smoke.jpg")
+                        cv2.imwrite(filename, frame)
 
     if label:
         print(label)
