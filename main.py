@@ -8,7 +8,7 @@ from datetime import datetime
 import math
 
 # Загрузка модели YOLO
-model = YOLO('best.pt')
+model = YOLO('best_pep.pt')
 
 # Параметры сети для отправки данных
 TCP_IP = '127.0.0.1'
@@ -19,11 +19,15 @@ TCP_PORT = 5005
 #sock.connect((TCP_IP, TCP_PORT))
 
 # Предварительная обработка
+
+
 def preprocess_frame(frame):
     frame = cv2.resize(frame, (640, 640))
     return frame
 
 # Вычисление угловых отклонений объекта на изображении - ещё считать и считать, но вроде правильно
+
+
 def get_object_angles(x_pixel, y_pixel, image_width, image_height, fov_horizontal, fov_vertical):
     # Координаты центра изображения
     center_x = image_width / 2
@@ -36,6 +40,8 @@ def get_object_angles(x_pixel, y_pixel, image_width, image_height, fov_horizonta
     return angle_x, angle_y
 
 # Функция для вычисления координат объекта - вроде правильное
+
+
 def calculate_object_coordinates(gps_coordinates, azimuth, elevation, distance):
 
     azimuth_rad = math.radians(azimuth)
@@ -55,6 +61,8 @@ def calculate_object_coordinates(gps_coordinates, azimuth, elevation, distance):
     }
 
 # Анализ детекций и сбор данных в JSON - основная функция
+
+
 def analyze_output(results, frame, camera_id, camera_params):
     detections = []
     image_height, image_width = frame.shape[:2]
@@ -117,12 +125,26 @@ def analyze_output(results, frame, camera_id, camera_params):
                 cv2.imwrite(filename, frame)
 
         if detections:
-            # Отправка данных в формате JSON
-            json_data = json.dumps({"detections": detections})
-            #sock.sendall(json_data.encode('utf-8'))
+            now = datetime.now()
+            date_str = now.strftime("%Y-%m-%d")
+            time_str = now.strftime("%Y-%m-%d_%H-%M")
+            folder_path = os.path.join("Detections", date_str)
+            os.makedirs(folder_path, exist_ok=True)
+            file_name = f"{time_str}.json"
+            file_path = os.path.join(folder_path, file_name)
+            json_data = json.dumps({"detections": detections}, indent=4)
+
+            try:
+                with open(file_path, 'w') as f:
+                    json.dump(json.loads(json_data), f, indent=4)
+                print(f"JSON сохранён: {file_path}")
+            except Exception as e:
+                print(f"Ошибка с обработкой файла: {e}")
 
         return detections
 # Параметры камеры (заменим потом на реальные параметры)
+
+
 camera_params_operator = {
     "fov_horizontal": 70.0,
     "fov_vertical": 60.0,    # Угол обзора по вертикали и горизонтали
@@ -162,7 +184,7 @@ while True:
     results_op = model(source=input_frame_op, save=False, verbose=False)
     detections_op = analyze_output(results_op, frame_op, camera_id="operator", camera_params=camera_params_operator)
 
-    # Чтение кадра с камеры БПЛА - заглушено п причине выше
+    # Чтение кадра с камеры БПЛА - заглушено по причине выше
     #ret_uav, frame_uav = cap_uav.read()
     #if not ret_uav:
     #    break
