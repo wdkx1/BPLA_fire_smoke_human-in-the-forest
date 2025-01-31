@@ -9,6 +9,31 @@ import math
 
 # Загрузка модели YOLO
 model = YOLO('best_pep.pt')
+# Параметры камеры (необходима замена на реальные параметры)
+
+
+camera_params_operator = {
+    "fov_horizontal": 70.0,
+    "fov_vertical": 60.0,    # Угол обзора по вертикали и горизонтали
+    "gps_coordinates": {
+        "latitude": 55.7558,
+        "longitude": 37.6173
+    },
+    "azimuth": 90.0,
+    "elevation": 0.0
+}
+
+camera_params_uav = {
+    "fov_horizontal": 70.0,
+    "fov_vertical": 60.0,    # Угол обзора по вертикали и горизонтали
+    "gps_coordinates": {
+        "latitude": 55.7558,
+        "longitude": 37.6173
+    },
+    "azimuth": 90.0,
+    "elevation": -10.0
+}
+
 
 # Параметры сети для отправки данных
 TCP_IP = '127.0.0.1'
@@ -142,35 +167,10 @@ def analyze_output(results, frame, camera_id, camera_params):
                 print(f"Ошибка с обработкой файла: {e}")
 
         return detections
-# Параметры камеры (заменим потом на реальные параметры)
-
-
-camera_params_operator = {
-    "fov_horizontal": 70.0,
-    "fov_vertical": 60.0,    # Угол обзора по вертикали и горизонтали
-    "gps_coordinates": {
-        "latitude": 55.7558,
-        "longitude": 37.6173
-    },
-    "azimuth": 90.0,
-    "elevation": 0.0
-}
-
-camera_params_uav = {
-    "fov_horizontal": 70.0,
-    "fov_vertical": 60.0,    # Угол обзора по вертикали и горизонтали
-    "gps_coordinates": {
-        "latitude": 55.7558,
-        "longitude": 37.6173
-    },
-    "azimuth": 90.0,
-    "elevation": -10.0
-}
 
 # Инициализация двух видеопотоков - для тестов на ноутбуке второй пока что заглушен, но он ловится
 cap_operator = cv2.VideoCapture(0)  # Камера оператора
 #cap_uav = cv2.VideoCapture(1)       # Камера БПЛА
-
 #if not cap_operator.isOpened() or not cap_uav.isOpened():
 #    print("Ошибка: Не удалось открыть одну или обе камеры.")
 #    exit()
