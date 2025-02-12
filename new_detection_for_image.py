@@ -197,4 +197,4 @@ def create_solution_submission(folder_path, output_csv=None, output_images_folde
 
 
 if __name__ == '__main__':
-    create_solution_submission(r'C:\Users\kitar\Downloads\000000.jpg')
+    create_solution_submission(r'C:\Users\kitar\Downloads')

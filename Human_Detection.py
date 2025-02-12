@@ -7,7 +7,7 @@ import math
 from datetime import datetime
 
 # Загрузка модели YOLO
-model = YOLO('best_pep.pt')
+model = YOLO('best_yolo11.pt')
 
 # Функция для предварительной обработки изображения
 def preprocess_frame(frame):
@@ -47,7 +47,7 @@ def analyze_detections(detections, frame, gps_coordinates, azimuth, fov_horizont
     results = []
 
     for detection in detections:
-        x_min, y_min, x_max, y_max, confidence, class_id = detection[:6]
+        x_min, y_min, x_max, y_max, confidence, class_id = detection[:4]
         
         # Вычисляем центральные координаты объекта
         x_center = (x_min + x_max) / 2
