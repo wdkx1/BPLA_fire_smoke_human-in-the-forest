@@ -9,7 +9,7 @@ import math
 import base64
 
 # Загрузка модели YOLO (замените на свою модель)
-model = YOLO('best_pep.pt')
+model = YOLO('best_yolo11.pt')
 
 # Параметры камеры (пример, замените на реальные)
 camera_params_operator = {
