@@ -7,6 +7,7 @@ import socket
 from datetime import datetime
 import math
 import base64
+import numpy as np
 
 # Загрузка модели YOLO (замените на свою модель)
 model = YOLO('best_yolo11.pt')
@@ -167,6 +168,7 @@ def analyze_output(results, frame, camera_id, camera_params):
 
     return detections
 
+
 # Функция для отправки скриншота (с обведёнными объектами) в формате JSON
 # с информацией о времени обнаружения, координатах и bounding box.
 def send_screenshot_in_json(detections, frame):
@@ -191,14 +193,28 @@ def send_screenshot_in_json(detections, frame):
 
     # Пример отправки (закомментировано, чтобы не было ошибки без сервера):
     # sock.sendall(json_string)
-    
-    # Для демонстрации просто выведем в консоль длину сообщения
+
+    try:
+        #  Преобразуем buffer (байты) в numpy array, а затем декодируем в изображение
+        np_array = np.frombuffer(buffer, np.uint8)
+        image = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
+
+        if image is None:
+            print("Ошибка декодирования изображения для сохранения.")
+            return
+
+        cv2.imwrite('tet.jpg', image)  # Сохраняем изображение
+        print(f"Скриншот сохранен в файл: {'tet.jpg'}")
+    except Exception as e:
+        print(f"Ошибка при сохранении изображения: {e}")
+
+        # Для демонстрации просто выведем в консоль длину сообщения
     print(f"JSON для отправки (длина {len(json_string)} байт):", data_to_send["message"])
+
 
 # Инициализация видеопотоков
 cap_operator = cv2.VideoCapture(0)  # Камера оператора
 # cap_uav = cv2.VideoCapture(1)     # Камера БПЛА (закомментирована для примера)
-
 #if not cap_operator.isOpened() or not cap_uav.isOpened():
 #    print("Ошибка: Не удалось открыть одну или обе камеры.")
 #    exit()
@@ -233,7 +249,7 @@ while True:
                         1)
         
         # Если есть детекции, отправляем скриншот в формате JSON
-        send_screenshot_in_json(detections_op, frame_op)
+            send_screenshot_in_json(detections_op, frame_op)
 
     # Аналогичные действия для камеры БПЛА (закомментировано для примера):
     # ret_uav, frame_uav = cap_uav.read()

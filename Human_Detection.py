@@ -25,6 +25,8 @@ def get_object_angles(x_pixel, y_pixel, image_width, image_height, fov_horizonta
     return angle_x, angle_y
 
 # Функция для вычисления координат объекта
+
+
 def calculate_object_coordinates(gps_coordinates, azimuth, elevation, distance):
     azimuth_rad = math.radians(azimuth)
     elevation_rad = math.radians(elevation)
@@ -47,7 +49,7 @@ def analyze_detections(detections, frame, gps_coordinates, azimuth, fov_horizont
     results = []
 
     for detection in detections:
-        x_min, y_min, x_max, y_max, confidence, class_id = detection[:4]
+        x_min, y_min, x_max, y_max, confidence, class_id = detection[:6]
         
         # Вычисляем центральные координаты объекта
         x_center = (x_min + x_max) / 2
