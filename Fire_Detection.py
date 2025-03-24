@@ -1,5 +1,4 @@
 import cv2
-import torch
 from ultralytics import YOLO
 import os
 import json
@@ -239,7 +238,6 @@ while True:
         for det in detections_op:
             x1, y1, x2, y2 = det["bbox"]
             cv2.rectangle(frame_op, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            # Можно также вывести текст/класс рядом с bbox (пример):
             cv2.putText(frame_op,
                         f"ID:{det['class_id']} conf:{det['confidence']:.2f}",
                         (x1, y1 - 10),
